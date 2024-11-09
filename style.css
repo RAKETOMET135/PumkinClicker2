@@ -1,0 +1,116 @@
+body{
+    background-color: #2c2c2c;
+}
+
+#pumpkin{
+    width: 500px;
+    height: 500px;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    cursor: pointer;
+}
+
+#main-currency{
+    color: white;
+
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+#exp-bar{
+    background-color: black;
+
+    width: 750px;
+    height: 25px;
+
+    position: absolute;
+    left: 50%;
+    bottom: 5%;
+    transform: translate(-50%);
+}
+
+#exp-mover{
+    background-color: green;
+
+    width: 0%;
+    height: 100%;
+}
+
+#exp-level{
+    color: white;
+
+    position: relative;
+    top: -100%;
+    left: 50%;
+    transform: translate(-5%, -50%);
+}
+
+#upgrades-window{
+    background-color: black;
+
+    width: 750px;
+    height: 300px;
+
+    position: absolute;
+    left: 50%;
+    top: -5000%;
+    transform: translate(-50%, -50%);
+}
+
+.upgrade-option{
+    background-color: white;
+
+    width: 240px;
+    height: 270px;
+
+    position: relative;
+    top: 5%;
+    left: 1.5%;
+
+    display: inline-block;
+}
+.upgrade-option h1{
+    max-width: 240px;
+    min-width: 240px;
+
+    position: absolute;
+    top: -5%;
+    left: 50%;
+    transform: translate(-50%);
+
+    text-align: center;
+}
+.upgrade-option p{
+    max-width: 240px;
+    min-width: 240px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+}
+.upgrade-option button{
+    max-width: 200px;
+    min-width: 200px;
+
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%);
+
+    cursor: pointer;
+}
+
+#boost-pumpkin{
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translate(-50%);
+}
