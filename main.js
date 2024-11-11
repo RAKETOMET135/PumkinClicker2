@@ -11,7 +11,7 @@ const buttonHolder = document.querySelector("#button-holder")
 const images = "PumpkinImages/"
 const pumpkinUpgradeImages = ["Upgrade1Pumpkin.png", "Upgrade2Pumpkin.png", "Upgrade3Pumpkin.png", "Upgrade4Pumpkin.png", "Upgrade5Pumpkin.png", "Upgrade6Pumpkin.png",
     "Upgrade7Pumpkin.png", "Upgrade8Pumpkin.png", "Upgrade9Pumpkin.png", "Upgrade10Pumpkin.png", "Upgrade11Pumpkin.png", "Upgrade12Pumpkin.png", "Upgrade13Pumpkin.png",
-    "Upgrade14Pumpkin.png", "Upgrade15Pumpkin.png"
+    "Upgrade14Pumpkin.png", "Upgrade15Pumpkin.png", "Upgrade16Pumpkin.png", "Upgrade17Pumpkin.png", "Upgrade18Pumpkin.png"
 ]
 
 let mainCurrency = 0
@@ -36,6 +36,10 @@ let diamondPumpkin = false
 let diamondPumpkinDelay = 500
 let diamondPumpkinMeter = 0
 
+let neonPumpkin = false
+let neonPumpkinDelay = 5000
+let neonPumpkinMeter = 0
+
 let canAutoclicker = false
 let autoClickerClicksMulti = 1
 let autoClickerExpMulti = 1
@@ -54,6 +58,7 @@ let gainExpFromGolden = false
 
 let goldenMulti = 1
 let diamondMulti = 1
+let neonMulti = 1
 
 let autoclickGoldDiamondAllow = false
 let autoclickGoldDiamondBoost = 1
@@ -62,6 +67,7 @@ let upgradesWindowOpen = false
 let upgradeTreeWindowOpen = false
 
 let getAllUpgrades = false
+let upgradesMulti = 1
 
 //
 //
@@ -82,7 +88,16 @@ function AbbreviateNumber(number, abbreviations_list, numbers_after_dot){
     let number_string = number.toString()
 
     number = Math.round(number)
-    number = number.toString()
+
+    if (number > 1000000000000000){
+        number = BigInt(number)
+
+        number = number.toString()
+    }
+    else{
+        number = number.toString()
+    }
+
     if (number.slice(0, 1) == "-"){
         front_symbol = "-"
         number = number.slice(1, number.length)
@@ -90,7 +105,7 @@ function AbbreviateNumber(number, abbreviations_list, numbers_after_dot){
 
     let digits = number.length
     let num_diff_list = []
-    for (let i = 1; i < 100; i++){
+    for (let i = 1; i < 555; i++){
         let num_diff = 3 * i
 
         num_diff_list.push(num_diff)
@@ -98,8 +113,7 @@ function AbbreviateNumber(number, abbreviations_list, numbers_after_dot){
 
     if (digits > 3){
         let picked_num_diff
-        number = Math.round(number)
-        number = number.toString()
+        
         digits = number.length
 
         for (let num_diff of num_diff_list){
@@ -294,7 +308,9 @@ function addVals(){
         level += 1
 
         if (getAllUpgrades){
-            getUpgrades()
+            for (let i = 0; i < upgradesMulti; i++){
+                getUpgrades()
+            }
         }
         else{
             renderUpgradeWindow()
@@ -320,6 +336,7 @@ function addVals(){
 function goldenPumpkinHandle(isAutoclicker){
     let gol = false
     let dia = false
+    let neon = false
 
     let e = getLevelE()
 
@@ -361,22 +378,47 @@ function goldenPumpkinHandle(isAutoclicker){
         }
     }
 
-    changePumpkinRarity(gol, dia)
+    if (neonPumpkin){
+        neonPumpkinMeter += 1
+
+        if (neonPumpkinMeter >= neonPumpkinDelay){
+            neonPumpkinMeter = 0
+
+            mainCurrency += ((1 + pumpkinBoost * pumpkinMulti * upgradeTreePumpkinBoost) * 10000 * neonMulti) * (autoclickGoldDiamondBoost + extraAutoclickers/3) * 5000000
+
+
+            if (neonPumpkinDelay === 1){
+                neon = true
+            }
+        }
+        else if (neonPumpkinMeter === neonPumpkinDelay - 1){
+            neon = true
+        }
+    }
+
+    changePumpkinRarity(gol, dia, neon, pumpkin)
 }
 
-function changePumpkinRarity(gol, dia){
-    if (gol && dia){
-        pumpkin.style.filter = "invert(1) sepia(1)"
+function changePumpkinRarity(gol, dia, neon, elementToChange){
+    let effect = ""
+
+    if (gol){
+        effect += "sepia(1)"
     }
-    else if (dia){
-        pumpkin.style.filter = "invert(1)"
+
+    if (dia){
+        effect += "invert(1)"
     }
-    else if (gol){
-        pumpkin.style.filter = "sepia(1)"
+
+    if (neon){
+        effect += "brightness(5)"
     }
-    else{
-        pumpkin.style.filter = "none"
+
+    if (effect === ""){
+        effect = "none"
     }
+
+    elementToChange.style.filter = effect
 }
 
 function doubleClick(){
@@ -424,6 +466,9 @@ function getLevelE(){
     else if (level < 100000){
         e = 1000000
     }
+    else if (level < 1000000){
+        e = 100000000
+    }
 
     return e
 }
@@ -467,6 +512,8 @@ function clickEffect(numberOfParticles){
 
         particle.style.left = `${centerX - 12.5}px`
         particle.style.top = `${centerY - 12.5}px`
+
+        particle.style.filter = pumpkin.style.filter
 
         document.body.appendChild(particle)
 
@@ -963,6 +1010,28 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 15007,
+        desc: "75% chance for quad clicks",
+        price: 50_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["quad-click", 75],
+        dependencies: [15006],
+        x: "800px",
+        y: "-1400px",
+        owned: false
+    },
+    {
+        id: 15008,
+        desc: "100% chance for quad clicks",
+        price: 135_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["quad-click", 100],
+        dependencies: [15007],
+        x: "900px",
+        y: "-1400px",
+        owned: false
+    },
+    {
         id: 16,
         desc: "x15 pumpkins per click",
         price: 15000000000000,
@@ -1015,6 +1084,61 @@ const treeUpgrades = [
         dependencies: [19],
         x: "0px",
         y: "-1900px",
+        owned: false
+    },
+    {
+        id: 21,
+        desc: "x75 pumpkins per click",
+        price: 225_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkins-multi", 75],
+        dependencies: [20],
+        x: "0px",
+        y: "-2000px",
+        owned: false
+    },
+    {
+        id: 22,
+        desc: "x100 pumpkins per click",
+        price: 3_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkins-multi", 100],
+        dependencies: [21],
+        x: "0px",
+        y: "-2100px",
+        owned: false
+    },
+    {
+        id: 23,
+        desc: "x250 pumpkins per click",
+        price: 45_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkins-multi", 250],
+        dependencies: [22],
+        x: "0px",
+        y: "-2200px",
+        owned: false
+    },
+    {
+        id: 24,
+        desc: "x500 pumpkins per click",
+        price: 850_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkins-multi", 500],
+        dependencies: [23],
+        x: "0px",
+        y: "-2300px",
+        owned: false
+    },
+    {
+        id: 25,
+        desc: "x1000 pumpkins per click",
+        price: 10_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkins-multi", 1000],
+        dependencies: [24],
+        x: "0px",
+        y: "-2400px",
         owned: false
     },
     {
@@ -1172,6 +1296,72 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 101001010,
+        desc: "Gain 75x from golden pumpkins",
+        price: 175_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["golden-multi", 75],
+        dependencies: [101001009],
+        x: "200px",
+        y: "1300px",
+        owned: false
+    },
+    {
+        id: 101001011,
+        desc: "Gain 100x from golden pumpkins",
+        price: 2_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["golden-multi", 100],
+        dependencies: [101001010],
+        x: "200px",
+        y: "1400px",
+        owned: false
+    },
+    {
+        id: 101001012,
+        desc: "Gain 250x from golden pumpkins",
+        price: 50_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["golden-multi", 250],
+        dependencies: [101001011],
+        x: "200px",
+        y: "1500px",
+        owned: false
+    },
+    {
+        id: 101001013,
+        desc: "Gain 500x from golden pumpkins",
+        price: 650_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["golden-multi", 500],
+        dependencies: [101001012],
+        x: "200px",
+        y: "1600px",
+        owned: false
+    },
+    {
+        id: 101001014,
+        desc: "Gain 1000x from golden pumpkins",
+        price: 2_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["golden-multi", 1000],
+        dependencies: [101001013],
+        x: "200px",
+        y: "1700px",
+        owned: false
+    },
+    {
+        id: 101001015,
+        desc: "Gain 10000x from golden pumpkins",
+        price: 67_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["golden-multi", 10000],
+        dependencies: [101001014],
+        x: "200px",
+        y: "1800px",
+        owned: false
+    },
+    {
         id: 101002,
         desc: "Golden pumpkin every 10 clicks",
         price: 300000,
@@ -1315,6 +1505,72 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 101004001008,
+        desc: "Gain 25x from diamond pumpkins",
+        price: 100_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["diamond-multi", 25],
+        dependencies: [101004001007],
+        x: "500px",
+        y: "1300px",
+        owned: false
+    },
+    {
+        id: 101004001009,
+        desc: "Gain 50x from diamond pumpkins",
+        price: 2_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["diamond-multi", 50],
+        dependencies: [101004001008],
+        x: "500px",
+        y: "1400px",
+        owned: false
+    },
+    {
+        id: 101004001010,
+        desc: "Gain 75x from diamond pumpkins",
+        price: 7_500_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["diamond-multi", 75],
+        dependencies: [101004001009],
+        x: "500px",
+        y: "1500px",
+        owned: false
+    },
+    {
+        id: 101004001011,
+        desc: "Gain 100x from diamond pumpkins",
+        price: 45_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["diamond-multi", 100],
+        dependencies: [101004001010],
+        x: "500px",
+        y: "1600px",
+        owned: false
+    },
+    {
+        id: 101004001012,
+        desc: "Gain 250x from diamond pumpkins",
+        price: 450_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["diamond-multi", 250],
+        dependencies: [101004001011],
+        x: "500px",
+        y: "1700px",
+        owned: false
+    },
+    {
+        id: 101004001013,
+        desc: "Gain 500x from diamond pumpkins",
+        price: 4_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["diamond-multi", 500],
+        dependencies: [101004001012],
+        x: "500px",
+        y: "1800px",
+        owned: false
+    },
+    {
         id: 101004002,
         desc: "Diamond pumpkin every 150 clicks",
         price: 1000000000,
@@ -1378,6 +1634,116 @@ const treeUpgrades = [
         dependencies: [101004006],
         x: "1100px",
         y: "400px",
+        owned: false
+    },
+    {
+        id: 101004007000,
+        desc: "Neon pumpkin every 5000 clicks",
+        price: 250_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-neon", 5000],
+        dependencies: [101004007],
+        x: "1100px",
+        y: "500px",
+        owned: false
+    },
+    {
+        id: 101004007001,
+        desc: "Neon pumpkin every 2500 clicks",
+        price: 2_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-neon", 2500],
+        dependencies: [101004007000],
+        x: "1100px",
+        y: "600px",
+        owned: false
+    },
+    {
+        id: 101004007002,
+        desc: "Neon pumpkin every 1000 clicks",
+        price: 6_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-neon", 1000],
+        dependencies: [101004007001],
+        x: "1200px",
+        y: "600px",
+        owned: false
+    },
+    {
+        id: 101004007002000,
+        desc: "Gain 1.5x more from neon pumpkins",
+        price: 30_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["neon-multi", 1.5],
+        dependencies: [101004007002],
+        x: "1200px",
+        y: "700px",
+        owned: false
+    },
+    {
+        id: 101004007002001,
+        desc: "Gain 2x more from neon pumpkins",
+        price: 850_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["neon-multi", 2],
+        dependencies: [101004007002000],
+        x: "1200px",
+        y: "800px",
+        owned: false
+    },
+    {
+        id: 101004007002002,
+        desc: "Gain 3x more from neon pumpkins",
+        price: 7_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["neon-multi", 3],
+        dependencies: [101004007002001],
+        x: "1200px",
+        y: "900px",
+        owned: false
+    },
+    {
+        id: 101004007003,
+        desc: "Neon pumpkin every 500 clicks",
+        price: 50_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-neon", 500],
+        dependencies: [101004007002],
+        x: "1300px",
+        y: "600px",
+        owned: false
+    },
+    {
+        id: 101004007004,
+        desc: "Neon pumpkin every 250 clicks",
+        price: 325_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-neon", 250],
+        dependencies: [101004007003],
+        x: "1400px",
+        y: "600px",
+        owned: false
+    },
+    {
+        id: 101004007005,
+        desc: "Neon pumpkin every 100 clicks",
+        price: 1_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-neon", 100],
+        dependencies: [101004007004],
+        x: "1500px",
+        y: "600px",
+        owned: false
+    },
+    {
+        id: 101004007006,
+        desc: "Neon pumpkin every 50 clicks",
+        price: 22_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-neon", 50],
+        dependencies: [101004007005],
+        x: "1600px",
+        y: "600px",
         owned: false
     },
     {
@@ -1546,6 +1912,39 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 115,
+        desc: "Skull pumpkin",
+        price: 2_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-skin"],
+        dependencies: [114],
+        x: "1600px",
+        y: "0px",
+        owned: false
+    },
+    {
+        id: 116,
+        desc: "Cat pumpkin",
+        price: 135_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-skin"],
+        dependencies: [115],
+        x: "1700px",
+        y: "0px",
+        owned: false
+    },
+    {
+        id: 117,
+        desc: "Distrustful pumpkin",
+        price: 10_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-skin"],
+        dependencies: [116],
+        x: "1800px",
+        y: "0px",
+        owned: false
+    },
+    {
         id: 200,
         desc: "Autoclicker",
         price: 250,
@@ -1675,6 +2074,28 @@ const treeUpgrades = [
         dependencies: [201008],
         x: "-700px",
         y: "-500px",
+        owned: false
+    },
+    {
+        id: 201010,
+        desc: "x100 autoclicker experience",
+        price: 20_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-experience", 100],
+        dependencies: [201009],
+        x: "-700px",
+        y: "-600px",
+        owned: false
+    },
+    {
+        id: 201011,
+        desc: "x250 autoclicker experience",
+        price: 4_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-experience", 250],
+        dependencies: [201010],
+        x: "-700px",
+        y: "-700px",
         owned: false
     },
     {
@@ -1887,6 +2308,61 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 208001009,
+        desc: "Autoclickers are more superior",
+        price: 150_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-gold-diamond-boost", 13],
+        dependencies: [208001008],
+        x: "-1900px",
+        y: "-200px",
+        owned: false
+    },
+    {
+        id: 208001010,
+        desc: "Autoclickers are unimaginable",
+        price: 555_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-gold-diamond-boost", 17],
+        dependencies: [208001009],
+        x: "-2000px",
+        y: "-200px",
+        owned: false
+    },
+    {
+        id: 208001011,
+        desc: "Autoclickers are more unimaginable",
+        price: 15_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-gold-diamond-boost", 22],
+        dependencies: [208001010],
+        x: "-2100px",
+        y: "-200px",
+        owned: false
+    },
+    {
+        id: 208001012,
+        desc: "Autoclickers are incomprehensible",
+        price: 200_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-gold-diamond-boost", 27],
+        dependencies: [208001011],
+        x: "-2200px",
+        y: "-200px",
+        owned: false
+    },
+    {
+        id: 208001013,
+        desc: "Autoclickers are more incomprehensible",
+        price: 5_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-gold-diamond-boost", 35],
+        dependencies: [208001012],
+        x: "-2300px",
+        y: "-200px",
+        owned: false
+    },
+    {
         id: 208002,
         desc: "4th autoclicker",
         price: 50_000_000_000,
@@ -1939,6 +2415,17 @@ const treeUpgrades = [
         dependencies: [208005],
         x: "-900px",
         y: "-700px",
+        owned: false
+    },
+    {
+        id: 208007,
+        desc: "9th autoclicker",
+        price: 99_999_999_999_999_999,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-extra", 9],
+        dependencies: [208006],
+        x: "-900px",
+        y: "-800px",
         owned: false
     },
     {
@@ -2005,6 +2492,39 @@ const treeUpgrades = [
         dependencies: [213],
         x: "-1500px",
         y: "0px",
+        owned: false
+    },
+    {
+        id: 214000,
+        desc: "Gain 2x level upgrades",
+        price: 75_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["upgrades-multi", 2],
+        dependencies: [214],
+        x: "-1500px",
+        y: "100px",
+        owned: false
+    },
+    {
+        id: 214001,
+        desc: "Gain 3x level upgrades",
+        price: 2_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["upgrades-multi", 3],
+        dependencies: [214000],
+        x: "-1500px",
+        y: "200px",
+        owned: false
+    },
+    {
+        id: 214002,
+        desc: "Gain 4x level upgrades",
+        price: 20_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["upgrades-multi", 4],
+        dependencies: [214001],
+        x: "-1500px",
+        y: "300px",
         owned: false
     },
     {
@@ -2150,6 +2670,72 @@ const treeUpgrades = [
         y: "1300px",
         owned: false
     },
+    {
+        id: 313,
+        desc: "x20 experience per click",
+        price: 95_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["experience-multi", 20],
+        dependencies: [312],
+        x: "0px",
+        y: "1400px",
+        owned: false
+    },
+    {
+        id: 314,
+        desc: "x35 experience per click",
+        price: 1_500_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["experience-multi", 35],
+        dependencies: [313],
+        x: "0px",
+        y: "1500px",
+        owned: false
+    },
+    {
+        id: 315,
+        desc: "x65 experience per click",
+        price: 10_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["experience-multi", 65],
+        dependencies: [314],
+        x: "0px",
+        y: "1600px",
+        owned: false
+    },
+    {
+        id: 316,
+        desc: "x100 experience per click",
+        price: 65_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["experience-multi", 100],
+        dependencies: [315],
+        x: "0px",
+        y: "1700px",
+        owned: false
+    },
+    {
+        id: 317,
+        desc: "x175 experience per click",
+        price: 1_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["experience-multi", 175],
+        dependencies: [316],
+        x: "0px",
+        y: "1800px",
+        owned: false
+    },
+    {
+        id: 318,
+        desc: "x250 experience per click",
+        price: 24_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["experience-multi", 250],
+        dependencies: [317],
+        x: "0px",
+        y: "1900px",
+        owned: false
+    },
 ]
 
 function canRenderUpgrade(treeUpgrade){
@@ -2168,14 +2754,14 @@ function canRenderUpgrade(treeUpgrade){
 }
 
 function getRenderButtonColor(treeUpgrade){
-    let color = "rgb(255, 0, 0)"
+    let color = "rgb(125, 0, 0)"
 
     if (treeUpgrade.owned){
         color = "rgb(255, 255, 255)"
     }
     else{
         if (treeUpgrade.currency === "pumpkins"){
-            if (mainCurrency >= treeUpgrade.price) color = "rgb(0, 255, 0)"
+            if (mainCurrency >= treeUpgrade.price) color = "rgb(0, 125, 0)"
         }
     }
 
@@ -2214,6 +2800,10 @@ function buyRenderButton(treeUpgrade){
                     diamondPumpkinDelay = treeUpgrade.upgrade[1]
                     diamondPumpkin = true
                 }
+                else if (treeUpgrade.upgrade[0] === "pumpkin-neon"){
+                    neonPumpkinDelay = treeUpgrade.upgrade[1]
+                    neonPumpkin = true
+                }
                 else if (treeUpgrade.upgrade[0] === "autoclicker-clicks"){
                     autoClickerClicksMulti = treeUpgrade.upgrade[1]
                 }
@@ -2241,11 +2831,17 @@ function buyRenderButton(treeUpgrade){
                 else if (treeUpgrade.upgrade[0] === "diamond-multi"){
                     diamondMulti = treeUpgrade.upgrade[1]
                 }
+                else if (treeUpgrade.upgrade[0] === "neon-multi"){
+                    neonMulti = treeUpgrade.upgrade[1]
+                }
                 else if (treeUpgrade.upgrade[0] === "autoclicker-gold-diamond"){
                     autoclickGoldDiamondAllow = true
                 }
                 else if (treeUpgrade.upgrade[0] === "autoclicker-gold-diamond-boost"){
                     autoclickGoldDiamondBoost = treeUpgrade.upgrade[1]
+                }
+                else if (treeUpgrade.upgrade[0] === "upgrades-multi"){
+                    upgradesMulti = treeUpgrade.upgrade[1]
                 }
                 else{
                     console.log("incorrect upgrade name")
@@ -2353,6 +2949,20 @@ document.addEventListener("mousemove", (e) => {
     }
 })
 
+let scale = 1
+upgradeTree.addEventListener("wheel", (e) => {
+    e.preventDefault()
+
+    if (e.deltaY > 0){
+        scale = Math.max(0.5, scale - 0.1)
+    }
+    else{
+        scale = Math.min(2, scale + 0.1)
+    }
+
+    buttonHolder.style.transform = "translate(-50%, -50%) scale(" + scale.toString() + ")"
+})
+
 loadData()
 addVals()
 
@@ -2403,7 +3013,12 @@ function saveData(){
         _autoclickGoldDiamondBoost: autoclickGoldDiamondBoost,
         _getAllUpgrades: getAllUpgrades,
         _upgradesData: upgradesData,
-        _upgradeSelection: upgradesWindowOpen
+        _upgradeSelection: upgradesWindowOpen,
+        _upgradesMulti: upgradesMulti,
+        _neonPumpkin: neonPumpkin,
+        _nenoPumpkinDelay: neonPumpkinDelay,
+        _neonPumpkinMeter: neonPumpkinMeter,
+        _neonMulti: neonMulti
     }
 
     localStorage.setItem("pumpkinClicker2Data", JSON.stringify(dataObject))
@@ -2448,6 +3063,17 @@ function loadData(){
     autoclickGoldDiamondBoost = storedData._autoclickGoldDiamondBoost
     getAllUpgrades = storedData._getAllUpgrades
 
+    if (storedData._upgradesMulti){
+        upgradesMulti = storedData._upgradesMulti
+    }
+
+    if (storedData._neonPumpkin){
+        neonPumpkin = storedData._neonPumpkin
+        neonPumpkinDelay = storedData._nenoPumpkinDelay
+        neonPumpkinMeter = storedData._neonPumpkinMeter
+        neonMulti = storedData._neonMulti
+    }
+
     storedData._upgradesData.forEach(upgradeDataObject => {
         if (upgradeDataObject._owned){
             treeUpgrades.forEach(upgradeTree => {
@@ -2468,14 +3094,18 @@ function loadData(){
 
     let _gol = false
     let _dia = false
+    let _neon = false
     if (diamondPumpkinMeter === diamondPumpkinDelay -1 || diamondPumpkinDelay === 1){
         _dia = true
     }
     if (goldenPumpkinMeter === goldenPumpkinDelay -1 || goldenPumpkinDelay === 1){
         _gol = true
     }
+    if (neonPumpkinMeter === neonPumpkinDelay -1 || neonPumpkinDelay === 1){
+        _neon = true
+    }
 
-    changePumpkinRarity(_gol, _dia)
+    changePumpkinRarity(_gol, _dia, _neon, pumpkin)
 
     setAutoClickerInterval(baseClickInterval - autoClickSpeed)
 }
