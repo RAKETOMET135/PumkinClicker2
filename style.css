@@ -13,6 +13,48 @@ body{
     transform: translate(-50%, -50%);
 
     cursor: pointer;
+
+    transition: all 0.1s;
+}
+
+.particle {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: #d47215;
+    border-radius: 50%;
+    animation: particle-move 0.35s forwards ease-out;
+    pointer-events: none;
+}
+
+@keyframes particle-move {
+    0% {
+        transform: scale(0);
+        opacity: 0.8;
+    }
+    25%{
+        transform: scale(0.2) translate(var(--x), var(--y));
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.5) translate(var(--x), var(--y));
+        opacity: 0;
+    }
+}
+
+@keyframes pumpkin-size {
+    0%{
+        width: 500px;
+        height: 500px;
+    }
+    50%{
+        width: 520px;
+        height: 520px;
+    }
+    100%{
+        width: 500px;
+        height: 500px;
+    }
 }
 
 #main-currency-wrapper{

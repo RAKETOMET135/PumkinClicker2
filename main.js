@@ -324,11 +324,10 @@ function goldenPumpkinHandle(isAutoclicker){
     let e = getLevelE()
 
     if (goldenPumpkin){
-        if (goldenPumpkinMeter === -1) goldenPumpkinMeter = 0
         goldenPumpkinMeter += 1
 
         if (goldenPumpkinMeter >= goldenPumpkinDelay){
-            goldenPumpkinMeter = -1
+            goldenPumpkinMeter = 0
 
             mainCurrency += ((1 + pumpkinBoost * pumpkinMulti * upgradeTreePumpkinBoost) * 50 * goldenPumpkinMulti * goldenMulti) * (autoclickGoldDiamondBoost + extraAutoclickers/3)
 
@@ -336,23 +335,36 @@ function goldenPumpkinHandle(isAutoclicker){
                 experience += (((((1 + experienceBoost) / (level / 25) * experienceMulti)) * upgradeTreeExperienceBoost) * 2.5) / e
             }
 
+            if (goldenPumpkinDelay === 1){
+                gol = true
+            }
+        }
+        else if (goldenPumpkinMeter === goldenPumpkinDelay - 1){
             gol = true
         }
     }
     
     if (diamondPumpkin){
-        if (diamondPumpkinMeter === -1) diamondPumpkinMeter = 0
         diamondPumpkinMeter += 1
 
         if (diamondPumpkinMeter >= diamondPumpkinDelay){
-            diamondPumpkinMeter = -1
+            diamondPumpkinMeter = 0
             
             mainCurrency += ((1 + pumpkinBoost * pumpkinMulti * upgradeTreePumpkinBoost) * 10000 * diamondMulti) * (autoclickGoldDiamondBoost + extraAutoclickers/3)
 
+            if (diamondPumpkinDelay === 1){
+                dia = true
+            }
+        }
+        else if (diamondPumpkinMeter === diamondPumpkinDelay - 1){
             dia = true
         }
     }
 
+    changePumpkinRarity(gol, dia)
+}
+
+function changePumpkinRarity(gol, dia){
     if (gol && dia){
         pumpkin.style.filter = "invert(1) sepia(1)"
     }
@@ -431,8 +443,44 @@ function autoClicker(){
         goldenPumpkinHandle(true)
     }
 
+    clickEffect(0.25 * extraAutoclickers)
+
     addVals()
 }
+
+function clickEffect(numberOfParticles){
+    const rect = pumpkin.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+
+    for (let i = 0; i < numberOfParticles; i++) {
+        const particle = document.createElement("div")
+        particle.classList.add("particle")
+
+        const angle = Math.random() * 2 * Math.PI
+        const distance = Math.random() * 100 + 250
+        const x = distance * Math.cos(angle)
+        const y = distance * Math.sin(angle)
+
+        particle.style.setProperty("--x", `${x}px`)
+        particle.style.setProperty("--y", `${y}px`)
+
+        particle.style.left = `${centerX - 12.5}px`
+        particle.style.top = `${centerY - 12.5}px`
+
+        document.body.appendChild(particle)
+
+        particle.addEventListener("animationend", () => {
+            particle.remove()
+        })
+    }
+
+    pumpkin.style.animation = "pumpkin-size 0.1s forwards ease-out"
+}
+
+pumpkin.addEventListener("animationend", () => {
+    pumpkin.style.animation = "none"
+})
 
 pumpkin.addEventListener("click", () => {
     if (upgradesWindowOpen || upgradeTreeWindowOpen) return
@@ -447,6 +495,8 @@ pumpkin.addEventListener("click", () => {
     goldenPumpkinHandle(false)
 
     addVals()
+
+    clickEffect(70)
 })
 
 let autoClickerInterval = null
@@ -2415,6 +2465,17 @@ function loadData(){
     if (pumpkinMulti > 1){
         pumpkin.src = images + pumpkinUpgradeImages[pumpkinMulti - 2]
     }
+
+    let _gol = false
+    let _dia = false
+    if (diamondPumpkinMeter === diamondPumpkinDelay -1 || diamondPumpkinDelay === 1){
+        _dia = true
+    }
+    if (goldenPumpkinMeter === goldenPumpkinDelay -1 || goldenPumpkinDelay === 1){
+        _gol = true
+    }
+
+    changePumpkinRarity(_gol, _dia)
 
     setAutoClickerInterval(baseClickInterval - autoClickSpeed)
 }
