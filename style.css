@@ -15,18 +15,52 @@ body{
     cursor: pointer;
 }
 
-#main-currency{
-    color: white;
+#main-currency-wrapper{
+    width: 500px;
 
     position: absolute;
     left: 50%;
     transform: translate(-50%);
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     z-index: 135;
 }
 
+#main-currency{
+    color: white;
+    background-color: rgb(255, 94, 0);
+
+    min-width: 250px;
+    max-width: 250px;
+
+    position: relative;
+
+    text-align: center;
+    border-radius: 15px;
+    border: black 5px solid;
+    font-family: "Creepster";
+    -webkit-text-stroke: black 1px;
+
+    cursor: default;
+}
+
+#main-currency-image{
+    background-color: rgb(255, 94, 0);
+
+    width: 35px;
+    height: 35px;
+
+    position: relative;
+
+    border-radius: 15px;
+    border: black 5px solid;
+}
+
 #exp-bar{
-    background-color: black;
+    background-color: rgb(31, 31, 31);
 
     width: 750px;
     height: 25px;
@@ -35,6 +69,9 @@ body{
     left: 50%;
     bottom: 5%;
     transform: translate(-50%);
+
+    border-radius: 15px;
+    border: black 5px solid;
 }
 
 #exp-mover{
@@ -42,15 +79,23 @@ body{
 
     width: 0%;
     height: 100%;
+
+    border-radius: 15px;
 }
 
 #exp-level{
     color: white;
 
     position: relative;
-    top: -100%;
+    top: -125%;
     left: 50%;
     transform: translate(-5%, -50%);
+
+    font-family: "Creepster";
+    -webkit-text-stroke: black 1px;
+    font-size: larger;
+
+    cursor: default;
 }
 
 #upgrades-window{
@@ -63,10 +108,13 @@ body{
     left: 50%;
     top: -5000%;
     transform: translate(-50%, -50%);
+
+    border-radius: 15px;
 }
 
 .upgrade-option{
-    background-color: white;
+    background-color: rgb(255, 94, 0);
+    color: white;
 
     width: 240px;
     height: 270px;
@@ -75,7 +123,16 @@ body{
     top: 5%;
     left: 1.5%;
 
+    font-family: "Creepster";
+    -webkit-text-stroke: black 1px;
+    border-radius: 15px;
+
     display: inline-block;
+
+    transition: all 0.1s;
+}
+.upgrade-option:hover{
+    scale: 1.025;
 }
 .upgrade-option h1{
     max-width: 240px;
@@ -87,6 +144,8 @@ body{
     transform: translate(-50%);
 
     text-align: center;
+
+    cursor: default;
 }
 .upgrade-option p{
     max-width: 240px;
@@ -97,25 +156,67 @@ body{
     left: 50%;
     transform: translate(-50%, -50%);
 
+    font-size: 20px;
+    -webkit-text-stroke: 0.5px black;
+
     text-align: center;
+
+    cursor: default;
 }
 .upgrade-option button{
+    background-color: black;
+    color:  white;
+
     max-width: 200px;
     min-width: 200px;
+
+    height: 25px;
 
     position: absolute;
     bottom: 5%;
     left: 50%;
     transform: translate(-50%);
 
+    border-radius: 15px;
+    -webkit-text-stroke: 0 black;
+    border: 2px solid black;
+
     cursor: pointer;
+
+    transition: all 0.1s;
+}
+.upgrade-option button:hover{
+    max-width: 210px;
+    min-width: 210px;
+    height: 30px;
 }
 
 #boost-pumpkin{
+    background-color: rgb(255, 94, 0);
+    color: white;
+
+    width: 250px;
+    height: 50px;
+
     position: absolute;
-    bottom: 15%;
+    bottom: 12.5%;
     left: 50%;
     transform: translate(-50%);
+
+    font-family: "Creepster";
+    -webkit-text-stroke: black 1px;
+    font-size: 25px;
+
+    border-radius: 15px;
+    border: black 5px solid;
+
+    cursor: pointer;
+
+    transition: all 0.1s;
+}
+#boost-pumpkin:hover{
+    width: 270px;
+    height: 55px;
 }
 
 #upgrade-tree{
@@ -130,21 +231,55 @@ body{
 }
 
 #exit-upgrades{
+    background-color: rgb(255, 94, 0);
+    color: white;
+
+    width: 250px;
+    height: 50px;
+
     position: absolute;
     left: 50%;
     bottom: 5%;
     transform: translate(-50%);
+
+    font-family: "Creepster";
+    -webkit-text-stroke: black 1px;
+    font-size: 25px;
+
+    border-radius: 15px;
+    border: black 5px solid;
+
+    cursor: pointer;
+
+    transition: all 0.1s;
+}
+#exit-upgrades:hover{
+    width: 260px;
+    height: 55px;
 }
 
 .tree-button{
-    min-width: 100px;
-    max-width: 100px;
-    min-height: 100px;
-    max-height: 100px;
+    min-width: 150px;
+    max-width: 150px;
+    min-height: 150px;
+    max-height: 150px;
 
     position: absolute;
 
+    border-radius: 15px;
+    border: 2px solid black;
+
+    font-family: "Creepster";
+    font-size: 20px;
+
     cursor: pointer;
+
+    transition: all 0.1s;
+}
+.tree-button:hover{
+    border: rgb(255, 94, 0) 5px solid;
+
+    scale: 1.1;
 }
 
 #button-holder{

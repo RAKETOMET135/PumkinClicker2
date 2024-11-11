@@ -2230,10 +2230,17 @@ function renderUpgradeTree(){
             currentRenderButtons.push(renderButton)
 
             renderButton.classList = "tree-button"
-            renderButton.style.top = treeUpgrade.y
-            renderButton.style.left = treeUpgrade.x
+            renderButton.style.top = (parseFloat(treeUpgrade.y.slice(0, treeUpgrade.y.length - 2)) * 1.5).toString() + "px"
+            renderButton.style.left = (parseFloat(treeUpgrade.x.slice(0, treeUpgrade.x.length - 2)) * 1.5).toString() + "px"
 
-            renderButton.innerText = treeUpgrade.desc + "\n\n" + a(treeUpgrade.price) + " " + treeUpgrade.currency
+            renderButton.innerText = treeUpgrade.desc + "\n\n"
+
+            let span = document.createElement("span")
+            renderButton.append(span)
+            span.innerText = a(treeUpgrade.price) + " " + treeUpgrade.currency
+            span.style.color = "rgb(255, 94, 0)"
+            //span.style.fontFamily = "Anton SC"
+            span.style.fontSize = "20px"
 
             renderButton.style.backgroundColor = getRenderButtonColor(treeUpgrade)
 
@@ -2243,6 +2250,14 @@ function renderUpgradeTree(){
                 if (success){
                     renderUpgradeTree()
                 }
+            })
+
+            renderButton.addEventListener("mouseenter", () => {
+                renderButton.style.zIndex = 10
+            })
+
+            renderButton.addEventListener("mouseleave", () => {
+                renderButton.style.zIndex = 0
             })
         }
     })
