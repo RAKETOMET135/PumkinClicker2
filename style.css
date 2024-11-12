@@ -15,6 +15,9 @@ body{
     cursor: pointer;
 
     transition: all 0.1s;
+
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .particle {
@@ -86,6 +89,8 @@ body{
     font-family: "Creepster";
     -webkit-text-stroke: black 1px;
 
+    user-select: none;
+
     cursor: default;
 }
 
@@ -96,6 +101,9 @@ body{
     height: 35px;
 
     position: relative;
+
+    user-select: none;
+    -webkit-user-drag: none;
 
     border-radius: 15px;
     border: black 5px solid;
@@ -138,6 +146,8 @@ body{
     font-size: larger;
 
     cursor: default;
+
+    user-select: none;
 }
 
 #upgrades-window{
@@ -188,6 +198,8 @@ body{
     text-align: center;
 
     cursor: default;
+
+    user-select: none;
 }
 .upgrade-option p{
     max-width: 240px;
@@ -202,6 +214,8 @@ body{
     -webkit-text-stroke: 0.5px black;
 
     text-align: center;
+
+    user-select: none;
 
     cursor: default;
 }
@@ -222,6 +236,8 @@ body{
     border-radius: 15px;
     -webkit-text-stroke: 0 black;
     border: 2px solid black;
+
+    font-family: "Creepster";
 
     cursor: pointer;
 
