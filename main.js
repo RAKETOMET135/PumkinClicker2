@@ -8,6 +8,11 @@ const upgradeTree = document.querySelector("#upgrade-tree")
 const exitUpgrades = document.querySelector("#exit-upgrades")
 const buttonHolder = document.querySelector("#button-holder")
 
+const playButton = document.querySelector("#play-button")
+const menuScreen = document.querySelector("#menu-screen")
+
+const resetDataButton = document.querySelector("#reset-data-button")
+
 const images = "PumpkinImages/"
 const pumpkinUpgradeImages = ["Upgrade1Pumpkin.png", "Upgrade2Pumpkin.png", "Upgrade3Pumpkin.png", "Upgrade4Pumpkin.png", "Upgrade5Pumpkin.png", "Upgrade6Pumpkin.png",
     "Upgrade7Pumpkin.png", "Upgrade8Pumpkin.png", "Upgrade9Pumpkin.png", "Upgrade10Pumpkin.png", "Upgrade11Pumpkin.png", "Upgrade12Pumpkin.png", "Upgrade13Pumpkin.png",
@@ -85,6 +90,35 @@ autoClickSpeed = 990
 
 //
 //
+let inMenu = true
+let dontSaveDataOnExit = false
+function ResetPlayerData(){
+    localStorage.removeItem("pumpkinClicker2Data")
+
+    dontSaveDataOnExit = true
+
+    window.location.reload()
+}
+
+playButton.addEventListener("click", () => {
+    menuScreen.remove()
+
+    inMenu = false
+})
+
+resetDataButton.addEventListener("click", () => {
+    if (resetDataButton.innerText === "Reset data"){
+        resetDataButton.innerText = "Confirm"
+        setTimeout(() => {
+            resetDataButton.innerText = "Reset data"
+        }, 5000)
+    }
+    else{
+        resetDataButton.innerText = "Reset data"
+
+        ResetPlayerData()
+    }
+})
 
 function AbbreviateNumber(number, abbreviations_list, numbers_after_dot){
     let converted_number
@@ -497,7 +531,7 @@ function getLevelE(){
 }
 
 function autoClicker(){
-    if (upgradesWindowOpen || upgradeTreeWindowOpen) return
+    if (upgradesWindowOpen || upgradeTreeWindowOpen || inMenu) return
     if (!canAutoclicker) return
 
     let d = doubleClick()
@@ -553,7 +587,7 @@ pumpkin.addEventListener("animationend", () => {
 })
 
 pumpkin.addEventListener("click", () => {
-    if (upgradesWindowOpen || upgradeTreeWindowOpen) return
+    if (upgradesWindowOpen || upgradeTreeWindowOpen || inMenu) return
 
     let d = doubleClick()
 
@@ -3691,6 +3725,7 @@ upgradeTree.addEventListener("wheel", (e) => {
 loadData()
 addVals()
 
+
 function saveData(){
     let upgradesData = []
 
@@ -3850,4 +3885,9 @@ function loadData(){
     setAutoClickerInterval(baseClickInterval - autoClickSpeed)
 }
 
-window.addEventListener("beforeunload", saveData)
+
+window.addEventListener("beforeunload", () => {
+    if (dontSaveDataOnExit) return
+
+    saveData()
+})
