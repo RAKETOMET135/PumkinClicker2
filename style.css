@@ -437,6 +437,8 @@ body{
     position: absolute;
     left: 0%;
     top: -1000%;
+
+    background-image: url(OtherImages/MenuBackground.png);
 }
 
 #exit-upgrades{

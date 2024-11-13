@@ -17,7 +17,7 @@ const images = "PumpkinImages/"
 const pumpkinUpgradeImages = ["Upgrade1Pumpkin.png", "Upgrade2Pumpkin.png", "Upgrade3Pumpkin.png", "Upgrade4Pumpkin.png", "Upgrade5Pumpkin.png", "Upgrade6Pumpkin.png",
     "Upgrade7Pumpkin.png", "Upgrade8Pumpkin.png", "Upgrade9Pumpkin.png", "Upgrade10Pumpkin.png", "Upgrade11Pumpkin.png", "Upgrade12Pumpkin.png", "Upgrade13Pumpkin.png",
     "Upgrade14Pumpkin.png", "Upgrade15Pumpkin.png", "Upgrade16Pumpkin.png", "Upgrade17Pumpkin.png", "Upgrade18Pumpkin.png", "Upgrade19Pumpkin.png", "Upgrade20Pumpkin.png",
-    "Upgrade21Pumpkin.png", "Upgrade22Pumpkin.png", "Upgrade23Pumpkin.png", "Upgrade24Pumpkin.png"
+    "Upgrade21Pumpkin.png", "Upgrade22Pumpkin.png", "Upgrade23Pumpkin.png", "Upgrade24Pumpkin.png", "Upgrade25Pumpkin.png"
 ]
 
 let mainCurrency = 0
@@ -62,6 +62,9 @@ let extraAutoclickers = 1
 
 let goldenPumpkinMulti = 1
 let gainExpFromGolden = false
+
+let diamondPumpkinMulti = 1
+let neonPumpkinMulti = 1
 
 let goldenMulti = 1
 let diamondMulti = 1
@@ -209,6 +212,12 @@ function upgradeAction(upgradeStats0, upgradeStats1){
     else if (upgradeStats0 == "golden-pumpkins"){
         goldenPumpkinMulti += upgradeStats1
     }
+    else if (upgradeStats0 == "diamond-pumpkins"){
+        diamondPumpkinMulti += upgradeStats1
+    }
+    else if (upgradeStats0 == "neon-pumpkins"){
+        neonPumpkinMulti += upgradeStats1
+    }
     else if (upgradeStats0 == "golden-experience"){
         gainExpFromGolden = true
     }
@@ -231,9 +240,23 @@ function assignUpgrade(upgrade){
             selectedUpgradeStats.push(["pumpkins", boost])
         }
         else{
-            upgrade[0].innerText = "Clicker veteran"
-            upgrade[1].innerText = "Gain 0.1% more pumpkins per golden pumpkin click"
-            selectedUpgradeStats.push(["golden-pumpkins", 0.1])
+            let randomOptionInteger = Math.floor(Math.random() * 10)    //0, 1 ... 9
+
+            if (randomOptionInteger === 0){
+                upgrade[0].innerText = "Godlike clicker"
+                upgrade[1].innerText = "Gain 0.001% more pumpkins per neon pumpkin click"
+                selectedUpgradeStats.push(["neon-pumpkins", 0.001])
+            }
+            else if (randomOptionInteger <= 3){
+                upgrade[0].innerText = "Superior clicker"
+                upgrade[1].innerText = "Gain 0.0015% more pumpkins per diamond pumpkin click"
+                selectedUpgradeStats.push(["diamond-pumpkins", 0.0015])
+            }
+            else{
+                upgrade[0].innerText = "Clicker veteran"
+                upgrade[1].innerText = "Gain 0.1% more pumpkins per golden pumpkin click"
+                selectedUpgradeStats.push(["golden-pumpkins", 0.1])
+            }
         }
     }
     else if (randomInteger === 1){
@@ -413,7 +436,7 @@ function goldenPumpkinHandle(isAutoclicker){
         if (diamondPumpkinMeter >= diamondPumpkinDelay){
             diamondPumpkinMeter = 0
             
-            mainCurrency += ((1 + pumpkinBoost * pumpkinMulti * upgradeTreePumpkinBoost) * 10000 * diamondMulti) * (autoclickGoldDiamondBoost + extraAutoclickers/3) * d
+            mainCurrency += ((1 + pumpkinBoost * pumpkinMulti * upgradeTreePumpkinBoost) * 10000 * diamondPumpkinMulti * diamondMulti) * (autoclickGoldDiamondBoost + extraAutoclickers/3) * d
 
             if (diamondPumpkinDelay === 1){
                 dia = true
@@ -430,7 +453,7 @@ function goldenPumpkinHandle(isAutoclicker){
         if (neonPumpkinMeter >= neonPumpkinDelay){
             neonPumpkinMeter = 0
 
-            mainCurrency += ((1 + pumpkinBoost * pumpkinMulti * upgradeTreePumpkinBoost) * 10000 * neonMulti) * (autoclickGoldDiamondBoost + extraAutoclickers/3) * 5000000 * d
+            mainCurrency += ((1 + pumpkinBoost * pumpkinMulti * upgradeTreePumpkinBoost) * 10000 * neonPumpkinMulti * neonMulti) * (autoclickGoldDiamondBoost + extraAutoclickers/3) * 5000000 * d
 
 
             if (neonPumpkinDelay === 1){
@@ -1265,6 +1288,17 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 32,
+        desc: "x250000 pumpkins per click",
+        price: 1_000_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkins-multi", 250000],
+        dependencies: [31],
+        x: "0px",
+        y: "-3100px",
+        owned: false
+    },
+    {
         id: 25000,
         desc: "1% chance for penta clicks",
         price: 10_000_000_000_000_000_000_000,
@@ -1639,6 +1673,17 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 101001022,
+        desc: "Gain 10Mx from golden pumpkins",
+        price: 1_500_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["golden-multi", 10000000],
+        dependencies: [101001021],
+        x: "200px",
+        y: "2500px",
+        owned: false
+    },
+    {
         id: 101002,
         desc: "Golden pumpkin every 10 clicks",
         price: 300000,
@@ -1914,6 +1959,17 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 101004001020,
+        desc: "Gain 1Mx from diamond pumpkins",
+        price: 2_000_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["diamond-multi", 1000000],
+        dependencies: [101004001019],
+        x: "500px",
+        y: "2500px",
+        owned: false
+    },
+    {
         id: 101004002,
         desc: "Diamond pumpkin every 150 clicks",
         price: 1000000000,
@@ -2120,6 +2176,17 @@ const treeUpgrades = [
         dependencies: [101004007002008],
         x: "1200px",
         y: "1600px",
+        owned: false
+    },
+    {
+        id: 101004007002010,
+        desc: "Gain 75x more from neon pumpkins",
+        price: 3_000_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["neon-multi", 75],
+        dependencies: [101004007002009],
+        x: "1200px",
+        y: "1700px",
         owned: false
     },
     {
@@ -2486,6 +2553,17 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 124,
+        desc: "Skull",
+        price: 25_000_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["pumpkin-skin"],
+        dependencies: [123],
+        x: "2500px",
+        y: "0px",
+        owned: false
+    },
+    {
         id: 200,
         desc: "Autoclicker",
         price: 250,
@@ -2648,6 +2726,17 @@ const treeUpgrades = [
         dependencies: [201011],
         x: "-700px",
         y: "-800px",
+        owned: false
+    },
+    {
+        id: 201013,
+        desc: "x5000 autoclicker experience",
+        price: 5_000_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-experience", 5000],
+        dependencies: [201012],
+        x: "-700px",
+        y: "-900px",
         owned: false
     },
     {
@@ -2992,6 +3081,17 @@ const treeUpgrades = [
         owned: false
     },
     {
+        id: 208001021,
+        desc: "Autoclickers are extremely unstoppable",
+        price: 500_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["autoclicker-gold-diamond-boost", 275],
+        dependencies: [208001020],
+        x: "-3100px",
+        y: "-200px",
+        owned: false
+    },
+    {
         id: 208002,
         desc: "4th autoclicker",
         price: 50_000_000_000,
@@ -3208,6 +3308,17 @@ const treeUpgrades = [
         upgrade: ["overdrive-slow", 0.0625],
         dependencies: [220],
         x: "-2200px",
+        y: "0px",
+        owned: false
+    },
+    {
+        id: 222,
+        desc: "Autoclickers overdrive gains 64x speed",
+        price: 325_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["overdrive-slow", 0.03125],
+        dependencies: [221],
+        x: "-2300px",
         y: "0px",
         owned: false
     },
@@ -3486,6 +3597,17 @@ const treeUpgrades = [
         y: "2200px",
         owned: false
     },
+    {
+        id: 322,
+        desc: "x5000 experience per click",
+        price: 5_000_000_000_000_000_000_000_000_000_000_000,
+        currency: "pumpkins",
+        upgrade: ["experience-multi", 5000],
+        dependencies: [321],
+        x: "0px",
+        y: "2300px",
+        owned: false
+    },
 ]
 
 function canRenderUpgrade(treeUpgrade){
@@ -3615,6 +3737,7 @@ function buyRenderButton(treeUpgrade){
     }
 
     addVals()
+    checkGameBG()
 
     return success
 }
@@ -3726,6 +3849,19 @@ loadData()
 addVals()
 
 
+function checkGameBG(){
+    if (pumpkinMulti >= 26){
+        upgradeTree.style.backgroundImage = "url(OtherImages/EndgameBackground.png)"
+        menuScreen.style.backgroundImage = "url(OtherImages/EndgameBackground.png)"
+        document.body.style.backgroundImage = "url(OtherImages/EndgameBackground.png)"
+    }
+    else{
+        upgradeTree.style.backgroundImage = "url(OtherImages/MenuBackground.png)"
+        menuScreen.style.backgroundImage = "url(OtherImages/MenuBackground.png)"
+        document.body.style.backgroundImage = "url(OtherImages/MenuBackground.png)"
+    }
+}
+
 function saveData(){
     let upgradesData = []
 
@@ -3781,7 +3917,9 @@ function saveData(){
         _neonMulti: neonMulti,
         _pentaClickChance: pentaClickChance,
         _upgradesOverdrive: upgradesOverdrive,
-        _overdriveSlow: overdriveSlow
+        _overdriveSlow: overdriveSlow,
+        _diamondPumpkinMulti: diamondPumpkinMulti,
+        _nenoPumpkinMulti: neonPumpkinMulti
     }
 
     localStorage.setItem("pumpkinClicker2Data", JSON.stringify(dataObject))
@@ -3849,6 +3987,11 @@ function loadData(){
         overdriveSlow = storedData._overdriveSlow
     }
 
+    if (storedData._diamondPumpkinMulti){
+        diamondPumpkinMulti = storedData._diamondPumpkinMulti
+        neonPumpkinMulti = storedData._nenoPumpkinMulti
+    }
+
     storedData._upgradesData.forEach(upgradeDataObject => {
         if (upgradeDataObject._owned){
             treeUpgrades.forEach(upgradeTree => {
@@ -3883,6 +4026,8 @@ function loadData(){
     changePumpkinRarity(_gol, _dia, _neon, pumpkin)
 
     setAutoClickerInterval(baseClickInterval - autoClickSpeed)
+
+    checkGameBG()
 }
 
 
